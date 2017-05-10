@@ -32,5 +32,6 @@ int print_lattice(int *lattice, int n)
         }
         printf("\n");
     }
+    printf("\n");
     return 0;
 }
