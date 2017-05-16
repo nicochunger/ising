@@ -56,10 +56,12 @@ int flip(int *lattice, int n, float T, int idx)
     else return 0;
 }
 
-int energia(int *lattice, int n)
+float energia(int *lattice, int n, float J, float B)
 {
     int i,j,E;
+    float E_B
     E = 0;
+    E_B = 0.0;
     for(i=0;i<n;i++)
     {
         for(j=0;j<n;j++)
@@ -74,5 +76,8 @@ int energia(int *lattice, int n)
                 E += lattice[i*n+j]*lattice[i*n+(j+1)] + lattice[i*n+j]*lattice[(i+1)*n+j];
         }
     }
-    return -E;
+    for(i=0;i<n*n;i++)
+        E_B += lattice[i];
+    E_B *= B;
+    return -J*E-E_B;
 }
