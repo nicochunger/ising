@@ -7,8 +7,7 @@ int fill_lattice(int *lattice, int n, float p)
     int i;
     for(i=0;i<n*n;i++)
     {
-        double rdom = ((double)rand()/(double)RAND_MAX);
-        if(rdom<p)
+        if(rand()<p*RAND_MAX)
             lattice[i] = 1;
         else
             lattice[i] = -1;

@@ -28,8 +28,7 @@ int pick_site(int *lattice, int n)
 {
     /* Elige un sitio aleatorio de la red. */
     int site;
-    double rdom = ((double)rand()/(double)RAND_MAX);
-    site = rdom * n * n;
+    site = ((double)rand()/(double)RAND_MAX) * n * n;
     return site;
 }
 
@@ -37,23 +36,32 @@ int flip(int *lattice, int n, float T, int idx)
 {
     /* Calcula el delta de energia del supuesto cambio y devuelve un 1
     si el cambio se acepta y un 0 si no se acepta. */
-    int en0, en1, delta_e;
-    float probabilidad;
-    en0 = energia(lattice,n);
-    lattice[idx] *= -1;
-    en1 = energia(lattice,n);
-    delta_e = en1 - en0;
+    int delta_e;
+    int i,j,N,E,S,W;
 
-    probabilidad = pow(e,-delta_e/T);
-    if(probabilidad > 1) // Si la probabilidad calculada es mayor a 1 se corta en 1
-        probabilidad = 1;
+    // Indices (i,j) del idx
+    i = idx/n;
+    j = idx%n;
 
-    // El cambio se acepta con la probabilidad calculada
-    double rdom = ((double)rand()/(double)RAND_MAX);
-    if(rdom>probabilidad)
-        return 0;
-    else
-        return 1;
+    // Vecinos
+    N = (i-1)*n+j;
+    E = i*n+j+1;
+    S = (i+1)*n+j;
+    W = i*n+j-1;
+    if(i==n-1) S = j;
+    if(j==n-1) E = i*n;
+    if(i==0) N = (n-1)*n+j;
+    if(j==0) W = i*n + (n-1);
+
+    delta_e = 2*lattice[idx]*(lattice[N]+lattice[E]+lattice[S]+lattice[W]);
+
+    if(delta_e < 0){ // Si la diferencia de energia es menor a 0, se acepta
+        lattice[idx] *= -1;
+        return 1;}
+    else if(rand()<exp(-(float)delta_e/T)*RAND_MAX){
+        lattice[idx] *= -1;
+        return 1;}
+    else return 0;
 }
 
 int energia(int *lattice, int n)
