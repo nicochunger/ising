@@ -7,11 +7,11 @@
 
 int main(int argc, char **argv)
 {
-    int n = 20; //Tamano de red
+    int n = 30; //Tamano de red
     int *lattice = malloc(n * n * sizeof(int));
     float prob = 0.5;
-    float T = 2;
-    int niter = 20000;
+    float T = 1;
+    int niter = 10000;
     srand(time(NULL));
     fill_lattice(lattice, n, prob);
     print_lattice(lattice, n);

@@ -3,8 +3,6 @@
 #include "stdlib.h"
 #include "math.h"
 
-#define e 2.71828           // Constante matematica e
-
 int metropolis(int *lattice, int n, float T)
 {
     /* Realiza el algoritmo de metropolis para un estado de la red.
@@ -14,14 +12,7 @@ int metropolis(int *lattice, int n, float T)
     int idx, acepta;
     idx = pick_site(lattice,n);
     acepta = flip(lattice, n, T, idx);
-
-    // Si acepta = 0, el cambio no se acepta.
-    // Como el cambio ya se habia hecho, hay que volver a cambiarlo.
-    // Si acepta = 1, no se hace nada porque el cambio ya estaba hecho.
-    if(acepta==0)
-        lattice[idx] *= -1;
-
-    return 0;
+    return acepta;
 }
 
 int pick_site(int *lattice, int n)
@@ -54,11 +45,12 @@ int flip(int *lattice, int n, float T, int idx)
     if(j==0) W = i*n + (n-1);
 
     delta_e = 2*lattice[idx]*(lattice[N]+lattice[E]+lattice[S]+lattice[W]);
+    //printf("%d\n", delta_e);
 
-    if(delta_e < 0){ // Si la diferencia de energia es menor a 0, se acepta
+    if(delta_e <= 0){ // Si la diferencia de energia es menor a 0, se acepta
         lattice[idx] *= -1;
         return 1;}
-    else if(rand()<exp(-(float)delta_e/T)*RAND_MAX){
+    else if((float)rand()<exp(-(float)delta_e/T)*RAND_MAX){
         lattice[idx] *= -1;
         return 1;}
     else return 0;
