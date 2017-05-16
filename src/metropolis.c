@@ -45,7 +45,6 @@ int flip(int *lattice, int n, float T, int idx)
     if(j==0) W = i*n + (n-1);
 
     delta_e = 2*lattice[idx]*(lattice[N]+lattice[E]+lattice[S]+lattice[W]);
-    //printf("%d\n", delta_e);
 
     if(delta_e <= 0){ // Si la diferencia de energia es menor a 0, se acepta
         lattice[idx] *= -1;
