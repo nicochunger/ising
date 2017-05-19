@@ -48,19 +48,14 @@ int flip(int *lattice, int n, float T, int idx, float J, float B)
 
 float delta_energia(int *lattice, int n, float J, float B, int idx)
 {
+    /* Calcula la diferencia de energia que hay cuando se cambia el sentido
+    del spin en la posicion idx. */
     float delta_e;
     int i,j,N,E,S,W;
+    
     // Indices (i,j) del idx
-    if(idx==0)
-    {
-        i = 0;
-        j = 0;
-    }
-    else
-    {
-        i = idx/n;
-        j = idx%n;
-    }
+    i = idx/n;
+    j = idx%n;
 
     // Vecinos
     N = (i-1)*n+j;
@@ -78,6 +73,7 @@ float delta_energia(int *lattice, int n, float J, float B, int idx)
 
 float energia(int *lattice, int n, float J, float B)
 {
+    /* Calcula la energia total de la red. */
     int i,j,E;
     float E_B;
     E = 0;
@@ -103,6 +99,7 @@ float energia(int *lattice, int n, float J, float B)
 
 int magnetizacion(int *lattice, int n)
 {
+    /* Calcula la magnetizacion total de la red */
     int i, M;
     M = 0;
     for(i=0;i<n*n;i++)
