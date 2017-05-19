@@ -46,12 +46,12 @@ int flip(int *lattice, int n, float T, int idx)
 
     delta_e = 2*lattice[idx]*(lattice[N]+lattice[E]+lattice[S]+lattice[W]);
 
-    if(delta_e <= 0){ // Si la diferencia de energia es menor a 0, se acepta
+    if(delta_e <= 0){ // Si la diferencia de energia es menor o igual a 0, se acepta
         lattice[idx] *= -1;
-        return 1;}
+        return lattice[idx];}
     else if((float)rand()<exp(-(float)delta_e/T)*RAND_MAX){
         lattice[idx] *= -1;
-        return 1;}
+        return lattice[idx];}
     else return 0;
 }
 
@@ -65,6 +65,7 @@ float energia(int *lattice, int n, float J, float B)
     {
         for(j=0;j<n;j++)
         {
+            E_B += lattice[i*n+j];
             if(i==n-1 && j==n-1) //Esquina inferior derecha
                 E += lattice[i*n+j]*lattice[i*n] + lattice[i*n+j]*lattice[j];
             else if(j==n-1) //Lado derecho
@@ -75,8 +76,17 @@ float energia(int *lattice, int n, float J, float B)
                 E += lattice[i*n+j]*lattice[i*n+(j+1)] + lattice[i*n+j]*lattice[(i+1)*n+j];
         }
     }
-    for(i=0;i<n*n;i++)
-        E_B += lattice[i];
     E_B *= B;
     return -J*E-E_B;
+}
+
+int magnetizacion(int lattice, int n)
+{
+    int i, M;
+    M = 0;
+    for(i=0;i<n*n;i++)
+    {
+        M += lattice[i];
+    }
+    return M;
 }
