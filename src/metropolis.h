@@ -6,4 +6,5 @@ int flip(int *lattice, int n, float T, int idx, float J, float B, float *p_e, in
 float energia(int *lattice, int n, float J, float B);
 float delta_energia(int *lattice, int n, float J, float B, int idx);
 int magnetizacion(int *lattice, int n);
+void guardar_resultados(float *datos, int n, char nombre[50]);
 #endif

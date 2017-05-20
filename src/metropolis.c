@@ -31,18 +31,18 @@ int flip(int *lattice, int n, float T, int idx, float J, float B, float *p_e, in
 
     delta_e = delta_energia(lattice,n,J,B,idx);
 
-    *p_e = *p_e + delta_e;
-
     if(delta_e <= 0) // Si la diferencia de energia es menor o igual a 0, se acepta
     {
         lattice[idx] *= -1;
         *p_m = *p_m + 2*lattice[idx];
+        *p_e = *p_e + delta_e;
         return 1;
     }
     else if((float)rand()<exp(-(float)delta_e/T)*RAND_MAX)
     {
         lattice[idx] *= -1;
         *p_m = *p_m + 2*lattice[idx];
+        *p_e = *p_e + delta_e;
         return 1;
     }
     else return 0;
@@ -109,4 +109,26 @@ int magnetizacion(int *lattice, int n)
         M += lattice[i];
     }
     return M;
+}
+
+void guardar_resultados(float *datos, int n, char nombre[50])
+{
+	/*
+	Esta funcion toma un vector con datos y los guarda todos en un archivo de texto
+	*/
+
+	int i;
+    char path[100];
+    sprintf(path, "/home/nunger/Documents/ising/res/%s", nombre);
+
+	FILE *fp; // Declaro el puntero que va a ir al archivo (FILE es un tipo)
+
+	fp = fopen(path,"w"); // "r": read  "w": write   "a": append
+
+	for(i=0;i<n;i++)
+	{
+		fprintf(fp,"%f\n",datos[i]); //Escribo todos los datos en una linea nueva
+	}
+
+	fclose(fp);
 }
