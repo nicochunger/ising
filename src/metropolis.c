@@ -3,7 +3,7 @@
 #include "stdlib.h"
 #include "math.h"
 
-int metropolis(int *lattice, int n, float T, float J, float B)
+int metropolis(int *lattice, int n, float T, float J, float B, float *p_e, int *p_m)
 {
     /* Realiza el algoritmo de metropolis para un estado de la red.
     Toma un sitio al azar, le cambia el spin calcula la diferencia
@@ -11,7 +11,7 @@ int metropolis(int *lattice, int n, float T, float J, float B)
     probabilidad exp(-Delta_e/T) */
     int idx, acepta;
     idx = pick_site(lattice,n);
-    acepta = flip(lattice, n, T, idx, J, B);
+    acepta = flip(lattice, n, T, idx, J, B, p_e, p_m);
     return acepta;
 }
 
@@ -23,7 +23,7 @@ int pick_site(int *lattice, int n)
     return site;
 }
 
-int flip(int *lattice, int n, float T, int idx, float J, float B)
+int flip(int *lattice, int n, float T, int idx, float J, float B, float *p_e, int *p_m)
 {
     /* Calcula el delta de energia del supuesto cambio y devuelve un 1
     si el cambio se acepta y un 0 si no se acepta. */
@@ -31,17 +31,19 @@ int flip(int *lattice, int n, float T, int idx, float J, float B)
 
     delta_e = delta_energia(lattice,n,J,B,idx);
 
+    *p_e = *p_e + delta_e;
+
     if(delta_e <= 0) // Si la diferencia de energia es menor o igual a 0, se acepta
     {
         lattice[idx] *= -1;
-        if(idx==0) return lattice[idx]*n*n;
-        else return lattice[idx]*idx;
+        *p_m = *p_m + 2*lattice[idx];
+        return 1;
     }
     else if((float)rand()<exp(-(float)delta_e/T)*RAND_MAX)
     {
         lattice[idx] *= -1;
-        if(idx==0) return lattice[idx]*n*n;
-        else return lattice[idx]*idx;
+        *p_m = *p_m + 2*lattice[idx];
+        return 1;
     }
     else return 0;
 }
@@ -52,7 +54,7 @@ float delta_energia(int *lattice, int n, float J, float B, int idx)
     del spin en la posicion idx. */
     float delta_e;
     int i,j,N,E,S,W;
-    
+
     // Indices (i,j) del idx
     i = idx/n;
     j = idx%n;
