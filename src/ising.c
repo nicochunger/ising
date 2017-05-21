@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     float J = 1; // J de la energia
     float B = 0.0; // Campo magnetico
     int nterm = 5000; // Nr de pasos para la pre-termalizacion
-    int niter = 1000000; // Nr de iteraciones
+    int niter = 3000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T

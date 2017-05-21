@@ -11,5 +11,9 @@ var_e = np.loadtxt(path + "tp2_varene.txt")
 var_m = np.loadtxt(path + "tp2_varmag.txt")
 temp = np.loadtxt(path + "tp2_temp_260.txt")
 
-plt.plot(temp,var_m,"b.")
+plt.plot(temp,var_e,"b.")
+
+print temp[np.argmax(var_e)]
+print temp[np.argmax(var_m)]
+#print max(var_m)
 #plt.plot(temp,mag,"r.")
