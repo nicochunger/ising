@@ -4,7 +4,7 @@
 
 int fill_lattice(int *lattice, int n, float p)
 {
-    
+
     int i;
     for(i=0;i<n*n;i++)
     {
@@ -14,15 +14,6 @@ int fill_lattice(int *lattice, int n, float p)
             lattice[i] = -1;
     }
     return 0;
-
-    /*
-    for(int i=0; i<n*n; i++)
-    {
-        if(i%2 == 0) lattice[i] = 1;
-        else lattice[i] = -1;
-    }
-    return 0;
-    */
 }
 
 int print_lattice(int *lattice, int n)
