@@ -12,6 +12,7 @@ var_m = np.loadtxt(path + "tp2_varmag.txt")
 temp = np.loadtxt(path + "tp2_temp_260.txt")
 
 plt.plot(temp,var_e,"b.")
+plt.title("Calor especifico")
 
 print temp[np.argmax(var_e)]
 print temp[np.argmax(var_m)]
