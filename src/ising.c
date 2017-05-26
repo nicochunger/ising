@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     float J = 1; // J de la energia
     float B = 0.0; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 100000; // Nr de iteraciones
+    int niter = 150000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 
     int k_iter = 10000;
     float *corr = malloc(k_iter*sizeof(float)); //Correlaciones en funcion de k
+    int n_rhos = 20;
 
     char nombre[50];
 
@@ -55,10 +56,10 @@ int main(int argc, char **argv)
     // Pre-termalizacion
     for(j=0;j<nterm;j++)
     {
-        metropolis(lattice,n,T[40],J,B,&e,&m);
+        metropolis(lattice,n,T[80],J,B,&e,&m);
     }
 
-    for(j=40; j<41; j++)
+    for(j=220; j<221; j++)
     {
         e_avg = 0;
         m_avg = 0;
@@ -88,21 +89,21 @@ int main(int argc, char **argv)
         //Correlaciones
         for(k=0;k<k_iter;k++)
         {
-            vme_k = 0.0;
-            e_2_avg = 0.0;
             corr[k] = 0.0;
-            for(l=0;l<10;l++)
+            for(l=0;l<n_rhos;l++)
             {
-                for(i=(int)((l/10)*(niter-k));i<(int)((niter-k)*((l+1)/10));i++)
+                vme_k = 0.0;
+                e_2_avg = 0.0;
+                for(i=(l/(float)n_rhos)*(niter-k);i<(niter-k)*((l+1)/(float)n_rhos);i++)
                 {
+                    //printf("%d\n", i);
                     vme_k += e_iter[i]*e_iter[i+k];
                     e_2_avg += e_iter[i]*e_iter[i];
                 }
                 //vme_k /= (niter-k);
-                corr[k] += vme_k / e_2_avg;
-                if(k%100 == 0) printf("%f\n", vme_k);
+                corr[k] += (vme_k / e_2_avg);
             }
-            corr[k] /= 10;
+            corr[k] /= n_rhos;
             if(k%100 == 0) printf("%f\n", corr[k]);
         }
 
