@@ -22,12 +22,12 @@ int main(int argc, char **argv)
     for(j=80;j<180;j++) T[j] = fino1 + (fino2-fino1)*(((float)j-80)/100);
     for(j=180;j<nT;j++) T[j] = fino2 + (stop-fino2)*(((float)j-180)/80);
 
-    int t_corr = 10000;
+    int t_corr = 5000;
 
     float J = 1; // J de la energia
-    float B = 0.0; // Campo magnetico
+    float B = 0.01; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 5000000; // Nr de iteraciones
+    int niter = 3000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
@@ -94,28 +94,33 @@ int main(int argc, char **argv)
     //print_lattice(lattice, n);
 
 
-    sprintf(nombre, "tp2_energia_3.txt");
+    sprintf(nombre, "tp2_energia_J03.txt");
     guardar_resultados(ene,nT,nombre);
 
-    sprintf(nombre, "tp2_varene_3.txt");
+    sprintf(nombre, "tp2_varene_J03.txt");
     guardar_resultados(var_e,nT,nombre);
 
-    sprintf(nombre, "tp2_mag_3.txt");
+    sprintf(nombre, "tp2_mag_J03.txt");
     guardar_resultados(mag,nT,nombre);
 
-    sprintf(nombre, "tp2_varmag_3.txt");
+    sprintf(nombre, "tp2_varmag_J03.txt");
     guardar_resultados(var_m,nT,nombre);
 
     sprintf(nombre, "tp2_temp_%d.txt", nT);
     guardar_resultados(T,nT,nombre);
 
-
+    /*
+    sprintf(nombre, "tp2_mag_t237.txt");
+    guardar_resultados(m_iter,niter/t_corr,nombre);
+    */
     free(lattice);
     free(ene);
     free(mag);
     free(T);
     free(var_e);
     free(var_m);
+    free(e_iter);
+    free(m_iter);
 
     return 0;
 }
