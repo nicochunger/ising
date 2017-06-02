@@ -24,8 +24,9 @@ int main(int argc, char **argv)
 
     int t_corr = 5000;
 
-    float J = -1; // J de la energia
-    float B = 1; // Campo magnetico
+    float J = 1; // J de la energia
+    float J2 = -1; // J para los segundos vecinos
+    float B = 0; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
     int niter = 5000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
     // Pre-termalizacion
     for(j=0;j<nterm;j++)
     {
-        metropolis(lattice,n,T[0],J,B,&e,&m);
+        metropolis(lattice,n,T[0],J,J2,B,&e,&m);
     }
 
     for(j=0; j<nT; j++)
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
         m_avg = 0;
         for (i = 0; i < niter; i++)
         {
-            metropolis(lattice, n, T[j], J, B, &e, &m);
+            metropolis(lattice, n, T[j], J, J2, B, &e, &m);
             // Solo guardo resultados cada t_corr pasos
             if(i%t_corr == 0)
             {
@@ -91,7 +92,7 @@ int main(int argc, char **argv)
 
     }
 
-    //print_lattice(lattice, n);
+    print_lattice(lattice, n);
 
 
     sprintf(nombre, "tp2_energia_aferro.txt");

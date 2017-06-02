@@ -10,4 +10,5 @@ var_m = np.loadtxt(path + "tp2_varmag_aferro.txt")
 temp = np.loadtxt(path + "tp2_temp_260.txt")
 
 plt.plot(temp, mag, 'b.')
+plt.title('Magnetizacion')
 plt.show()

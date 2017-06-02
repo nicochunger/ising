@@ -3,7 +3,7 @@
 #include "stdlib.h"
 #include "math.h"
 
-int metropolis(int *lattice, int n, float T, float J, float B, float *p_e, int *p_m)
+int metropolis(int *lattice, int n, float T, float J, float J2, float B, float *p_e, int *p_m)
 {
     /* Realiza el algoritmo de metropolis para un estado de la red.
     Toma un sitio al azar, le cambia el spin calcula la diferencia
@@ -11,7 +11,7 @@ int metropolis(int *lattice, int n, float T, float J, float B, float *p_e, int *
     probabilidad exp(-Delta_e/T) */
     int idx, acepta;
     idx = pick_site(lattice,n);
-    acepta = flip(lattice, n, T, idx, J, B, p_e, p_m);
+    acepta = flip(lattice, n, T, idx, J, J2, B, p_e, p_m);
     return acepta;
 }
 
@@ -23,13 +23,13 @@ int pick_site(int *lattice, int n)
     return site;
 }
 
-int flip(int *lattice, int n, float T, int idx, float J, float B, float *p_e, int *p_m)
+int flip(int *lattice, int n, float T, int idx, float J, float J2, float B, float *p_e, int *p_m)
 {
     /* Calcula el delta de energia del supuesto cambio y devuelve un 1
     si el cambio se acepta y un 0 si no se acepta. */
     float delta_e;
 
-    delta_e = delta_energia(lattice,n,J,B,idx);
+    delta_e = delta_energia(lattice,n,J,J2,B,idx);
 
     if(delta_e <= 0) // Si la diferencia de energia es menor o igual a 0, se acepta
     {
@@ -48,55 +48,110 @@ int flip(int *lattice, int n, float T, int idx, float J, float B, float *p_e, in
     else return 0;
 }
 
-float delta_energia(int *lattice, int n, float J, float B, int idx)
+
+float delta_energia(int *lattice, int n, float J, float J2, float B, int idx)
 {
     /* Calcula la diferencia de energia que hay cuando se cambia el sentido
-    del spin en la posicion idx. */
+    del spin en la posicion idx. Para el caso ferro-antiferro. Donde los
+    spines interactuan de forma ferromagnetica con sus primeros vecinos y
+    antiferromagnetico con sus segundos vecinos (diagonales) */
     float delta_e;
-    int i,j,N,E,S,W;
+    int i,j,N,E,S,W,NE,NW,SE,SW;
 
     // Indices (i,j) del idx
     i = idx/n;
     j = idx%n;
 
-    // Vecinos
+    // Primeros vecinos
     N = (i-1)*n+j;
     E = i*n+j+1;
     S = (i+1)*n+j;
     W = i*n+j-1;
-    if(i==n-1) S = j;
-    if(j==n-1) E = i*n;
-    if(i==0) N = (n-1)*n+j;
-    if(j==0) W = i*n + (n-1);
 
+    //Segundos vecinos
+    NE = (i-1)*n+(j+1);
+    NW = (i-1)*n+(j-1);
+    SE = (i+1)*n+(j+1);
+    SW = (i+1)*n+(j-1);
+
+    // Condiciones periodicas de contorno
+    if(i==n-1){
+        S = j;
+        SE = (j+1);
+        SW = (j-1);}
+    if(j==n-1){
+        E = i*n;
+        NE = (i-1)*n;
+        SE = (i+1)*n;}
+    if(i==0){
+        N = (n-1)*n+j;
+        NE = (n-1)*n+(j+1);
+        NW = (n-1)*n+(j-1);}
+    if(j==0){
+        W = i*n + (n-1);
+        NW = (i-1)*n+(n-1);
+        SW = (i+1)*n+(n-1);}
+
+    // Contribucion primeros vecinos
     delta_e = 2*J*lattice[idx]*(lattice[N]+lattice[E]+lattice[S]+lattice[W])+2*B*lattice[idx];
+
+    // Contribucion segundos vecinos
+    delta_e += 2*J2*lattice[idx]*(lattice[NE]+lattice[NW]+lattice[SE]+lattice[SW]);
+
     return delta_e;
 }
 
-float energia(int *lattice, int n, float J, float B)
+float energia(int *lattice, int n, float J, float J2, float B)
 {
-    /* Calcula la energia total de la red. */
-    int i,j,E;
-    float E_B;
-    E = 0;
+    /* Calcula la energia total de la red. Tiene en cuenta los primeros
+    y segundos vecinos.*/
+    int i,j;
+    int N,E,W,S,NE,NW,SE,SW;
+    float E_J, E_J2, E_B, E;
+    E_J = 0.0;
+    E_J2 = 0.0;
     E_B = 0.0;
     for(i=0;i<n;i++)
     {
         for(j=0;j<n;j++)
         {
+            // Primeros vecinos
+            N = (i-1)*n+j;
+            E = i*n+j+1;
+            S = (i+1)*n+j;
+            W = i*n+j-1;
+
+            // Segundos vecinos
+            NE = (i-1)*n+(j+1);
+            NW = (i-1)*n+(j-1);
+            SE = (i+1)*n+(j+1);
+            SW = (i+1)*n+(j-1);
+
+            // Condiciones periodicas de contorno
+            if(i==n-1){
+                S = j;
+                SE = (j+1);
+                SW = (j-1);}
+            if(j==n-1){
+                E = i*n;
+                NE = (i-1)*n;
+                SE = (i+1)*n;}
+            if(i==0){
+                N = (n-1)*n+j;
+                NE = (n-1)*n+(j+1);
+                NW = (n-1)*n+(j-1);}
+            if(j==0){
+                W = i*n + (n-1);
+                NW = (i-1)*n+(n-1);
+                SW = (i+1)*n+(n-1);}
+
+            E_J += lattice[i*n+j]*(lattice[E] + lattice[S]);
+            E_J2 += lattice[i*n+j]*(lattice[SE] + lattice[SW]);
             E_B += lattice[i*n+j];
-            if(i==n-1 && j==n-1) //Esquina inferior derecha
-                E += lattice[i*n+j]*lattice[i*n] + lattice[i*n+j]*lattice[j];
-            else if(j==n-1) //Lado derecho
-                E += lattice[i*n+j]*lattice[i*n] + lattice[i*n+j]*lattice[(i+1)*n+j];
-            else if(i==n-1)
-                E += lattice[i*n+j]*lattice[i*n+(j+1)] + lattice[i*n+j]*lattice[j];
-            else //resto
-                E += lattice[i*n+j]*lattice[i*n+(j+1)] + lattice[i*n+j]*lattice[(i+1)*n+j];
         }
     }
-    E_B *= B;
-    return -J*E-E_B;
+    E = -J*E_J - J2*E_J2 - B*E_B;
+    return E;
 }
 
 int magnetizacion(int *lattice, int n)
