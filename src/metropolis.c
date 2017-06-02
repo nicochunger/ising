@@ -107,7 +107,7 @@ float energia(int *lattice, int n, float J, float J2, float B)
     y segundos vecinos.*/
     int i,j;
     int N,E,W,S,NE,NW,SE,SW;
-    float E_J, E_J2, E_B, E;
+    float E_J, E_J2, E_B, E_total;
     E_J = 0.0;
     E_J2 = 0.0;
     E_B = 0.0;
@@ -150,8 +150,8 @@ float energia(int *lattice, int n, float J, float J2, float B)
             E_B += lattice[i*n+j];
         }
     }
-    E = -J*E_J - J2*E_J2 - B*E_B;
-    return E;
+    E_total = -J*E_J - J2*E_J2 - B*E_B;
+    return E_total;
 }
 
 int magnetizacion(int *lattice, int n)

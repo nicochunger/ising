@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     float J2 = -1; // J para los segundos vecinos
     float B = 0; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 5000000; // Nr de iteraciones
+    int niter = 2000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     fill_lattice(lattice, n, prob);
     //print_lattice(lattice, n);
 
-    float e = energia(lattice,n,J,B);
+    float e = energia(lattice,n,J,J2,B);
     int m = magnetizacion(lattice,n);
 
     float e_avg; //Energia promedio de todos los niter pasos en cada T
@@ -90,21 +90,23 @@ int main(int argc, char **argv)
         var_e[j] = sqrt(var_e[j]/(niter/t_corr))/n/n;
         var_m[j] = sqrt(var_m[j]/(niter/t_corr))/n/n;
 
+        if(j%2 == 0) printf("%d\n", j*100/nT);
+
     }
 
     print_lattice(lattice, n);
 
 
-    sprintf(nombre, "tp2_energia_aferro.txt");
+    sprintf(nombre, "tp2_energia_faf.txt");
     guardar_resultados(ene,nT,nombre);
 
-    sprintf(nombre, "tp2_varene_aferro.txt");
+    sprintf(nombre, "tp2_varene_faf.txt");
     guardar_resultados(var_e,nT,nombre);
 
-    sprintf(nombre, "tp2_mag_aferro.txt");
+    sprintf(nombre, "tp2_mag_faf.txt");
     guardar_resultados(mag,nT,nombre);
 
-    sprintf(nombre, "tp2_varmag_aferro.txt");
+    sprintf(nombre, "tp2_varmag_faf.txt");
     guardar_resultados(var_m,nT,nombre);
 
     sprintf(nombre, "tp2_temp_%d.txt", nT);
