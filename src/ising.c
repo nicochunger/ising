@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    int n = 256; //Tamano de red
+    int n = 32; //Tamano de red
     int *lattice = malloc(n * n * sizeof(int));
     float prob = 0.5; // Probabilidad inicial de llenado
     int i,j,k,l;
@@ -24,10 +24,10 @@ int main(int argc, char **argv)
 
     int t_corr = 5000;
 
-    float J = 1; // J de la energia
-    float B = 0.0; // Campo magnetico
+    float J = -1; // J de la energia
+    float B = 1; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 10000000; // Nr de iteraciones
+    int niter = 5000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
@@ -94,16 +94,16 @@ int main(int argc, char **argv)
     //print_lattice(lattice, n);
 
 
-    sprintf(nombre, "tp2_energia_n%d.txt", n);
+    sprintf(nombre, "tp2_energia_aferro.txt");
     guardar_resultados(ene,nT,nombre);
 
-    sprintf(nombre, "tp2_varene_n%d.txt", n);
+    sprintf(nombre, "tp2_varene_aferro.txt");
     guardar_resultados(var_e,nT,nombre);
 
-    sprintf(nombre, "tp2_mag_n%d.txt", n);
+    sprintf(nombre, "tp2_mag_aferro.txt");
     guardar_resultados(mag,nT,nombre);
 
-    sprintf(nombre, "tp2_varmag_n%d.txt", n);
+    sprintf(nombre, "tp2_varmag_aferro.txt");
     guardar_resultados(var_m,nT,nombre);
 
     sprintf(nombre, "tp2_temp_%d.txt", nT);
