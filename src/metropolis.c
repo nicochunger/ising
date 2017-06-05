@@ -145,12 +145,28 @@ float energia(int *lattice, int n, float J, float J2, float B)
                 NW = (i-1)*n+(n-1);
                 SW = (i+1)*n+(n-1);}
 
+            // Casos especiales para las esquinas
+            if(i==0 & j==0)
+                NW = (n-1)*n+(n-1);
+            if(i==0 & j==n-1)
+                NE = (n-1)*n;
+            if(i==n-1 & j==0)
+                SW = (n-1);
+            if(i==n-1 & j==n-1)
+                SE = 0;
+
             E_J += lattice[i*n+j]*(lattice[E] + lattice[S]);
             E_J2 += lattice[i*n+j]*(lattice[SE] + lattice[SW]);
             E_B += lattice[i*n+j];
+
+            //printf("%f\n", E_J2);
         }
     }
+    printf("%f\n", E_J);
+    printf("%f\n", E_J2);
+    printf("%f\n\n", E_B);
     E_total = -J*E_J - J2*E_J2 - B*E_B;
+    printf("%f\n\n", E_total);
     return E_total;
 }
 

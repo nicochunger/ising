@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 path = "/home/nunger/Documents/ising/res/"
 
-energia = np.loadtxt(path + "tp2_energia_faf.txt")
-mag = np.loadtxt(path + "tp2_mag_faf.txt")
+energia = np.loadtxt(path + "tp2_energia_faf_test.txt")
+mag = np.loadtxt(path + "tp2_mag_faf_test.txt")
 var_e = np.loadtxt(path + "tp2_varene_faf.txt")
 var_m = np.loadtxt(path + "tp2_varmag_faf.txt")
 temp = np.loadtxt(path + "tp2_temp_260.txt")
