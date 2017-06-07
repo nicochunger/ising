@@ -21,5 +21,10 @@ var_e = np.loadtxt(path + "tp2_varene_B.txt")
 
 plt.plot(temp, mag4, 'b.')
 
+plt.title('Magnetizacion media vs temperatura (con campo externo debil)')
+
+plt.xlabel('Temperatura (' + r'$T$' + ' )')
+plt.ylabel('Magnetizacion media por sitio')
+
 plt.show()
 

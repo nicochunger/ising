@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    int n = 32; //Tamano de red
+    int n = 1024; //Tamano de red
     int *lattice = malloc(n * n * sizeof(int));
     float prob = 0.5; // Probabilidad inicial de llenado
     int i,j,k,l;
@@ -22,13 +22,13 @@ int main(int argc, char **argv)
     for(j=80;j<180;j++) T[j] = fino1 + (fino2-fino1)*(((float)j-80)/100);
     for(j=180;j<nT;j++) T[j] = fino2 + (stop-fino2)*(((float)j-180)/80);
 
-    int t_corr = 5000;
+    int t_corr = n*n;
 
     float J = 1; // J de la energia
-    float J2 = -1; // J para los segundos vecinos
-    float B = 0.005; // Campo magnetico
+    float J2 = 0; // J para los segundos vecinos
+    float B = 0; // Campo magnetico
     int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 3000000; // Nr de iteraciones
+    int niter = 500000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     srand(time(NULL));
     fill_lattice(lattice, n, prob);
-    print_lattice(lattice, n);
+    //print_lattice(lattice, n);
 
     float e = energia(lattice,n,J,J2,B);
     int m = magnetizacion(lattice,n);
@@ -97,22 +97,25 @@ int main(int argc, char **argv)
     print_lattice(lattice, n);
 
 
-    sprintf(nombre, "tp2_energia_faf_test.txt");
+    sprintf(nombre, "tp2_energia_n%d_sinB.txt", n);
     guardar_resultados(ene,nT,nombre);
 
-    /*
-    sprintf(nombre, "tp2_varene_faf.txt");
+    sprintf(nombre, "tp2_varene_n%d_sinB.txt", n);
     guardar_resultados(var_e,nT,nombre);
-    */
 
-    sprintf(nombre, "tp2_mag_faf_test.txt");
+    sprintf(nombre, "tp2_mag_n%d_sinB.txt", n);
     guardar_resultados(mag,nT,nombre);
 
-    /*
-    sprintf(nombre, "tp2_varmag_faf.txt");
+    sprintf(nombre, "tp2_varmag_n%d_sinB.txt", n);
     guardar_resultados(var_m,nT,nombre);
 
-    sprintf(nombre, "tp2_temp_%d.txt", nT);
+    /*
+    sprintf(nombre, "tp2_lattice_n%d_sinB.txt", n);
+    guardar_resultados((float *)lattice,n*n,nombre);
+    */
+
+    /*
+    sprintf(nombre, "tp2_temp_0_7.txt");
     guardar_resultados(T,nT,nombre);
     */
 
@@ -120,6 +123,7 @@ int main(int argc, char **argv)
     sprintf(nombre, "tp2_mag_t237.txt");
     guardar_resultados(m_iter,niter/t_corr,nombre);
     */
+
     free(lattice);
     free(ene);
     free(mag);
