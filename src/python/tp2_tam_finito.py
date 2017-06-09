@@ -39,6 +39,9 @@ var_e1024 = np.loadtxt(path + "tp2_varene_n1024.txt")
 
 temp = np.loadtxt(path + "tp2_temp_260.txt")
 
+plt.style.use('seaborn-whitegrid')
+plt.grid(b=True, which='mayor',color='k', linestyle='-')
+
 plt.figure(0)
 plt.plot(temp,mag32,"c.")
 plt.plot(temp,mag64,"b.")
@@ -49,12 +52,15 @@ plt.plot(temp,mag1024,"g.")
 plt.title("Magnetizacion")
 
 plt.figure(1)
-plt.plot(temp,var_e32,"c.")
-plt.plot(temp,var_e64,"b.")
-plt.plot(temp,var_e128,"r.")
-plt.plot(temp,var_e256,"m.")
-plt.plot(temp,var_e512,"k.")
-plt.plot(temp,var_e1024,"g.")
-plt.title("Suceptibilidad")
+plt.plot(temp,var_e32,"c.", label='L=32')
+plt.plot(temp,var_e64,"b.", label='L=64')
+plt.plot(temp,var_e128,"r.", label='L=128')
+plt.plot(temp,var_e256,"m.", label='L=256')
+plt.plot(temp,var_e512,"k.", label='L=512')
+plt.plot(temp,var_e1024,"g.", label='L=1024')
+
+plt.xlabel(r'Temperatura $(T)$')
+plt.ylabel(r'Calor especifico $(C_V)$')
+plt.legend(loc=1)
 
 plt.show()

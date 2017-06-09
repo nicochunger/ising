@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    int n = 1024; //Tamano de red
+    int n = 256; //Tamano de red
     int *lattice = malloc(n * n * sizeof(int));
     float prob = 0.5; // Probabilidad inicial de llenado
     int i,j,k,l;
@@ -27,8 +27,8 @@ int main(int argc, char **argv)
     float J = 1; // J de la energia
     float J2 = 0; // J para los segundos vecinos
     float B = 0; // Campo magnetico
-    int nterm = 10000; // Nr de pasos para la pre-termalizacion
-    int niter = 500000000; // Nr de iteraciones
+    int nterm = 1000000; // Nr de pasos para la pre-termalizacion
+    int niter = 20000000; // Nr de iteraciones
     int delta_mag; //Cambio de magnetizacion en cada iteracion
     float *ene = malloc(nT*sizeof(float)); //Energia media vs T
     float *mag = malloc(nT*sizeof(float)); //Magnetizacion media vs T
